@@ -168,7 +168,7 @@ def pick_colours(names, colour_count)
       str << "#{name.strip} you must build a deck with #{colours.sample(colour_count).join(' and ')}\n"
     end
   end
-  make_response("The draw:\n" + result).to_json
+  make_response(("*The draw*:\n" + result))
 end
 
 post '/card' do
@@ -183,5 +183,5 @@ end
 post '/assign_colours' do
   names = params['text'].split ','
   colour_count = (names.last.to_i == 0) ? 1 : names.pop.to_i
-  pick_colours(names, colour_count)
+  json pick_colours(names, colour_count)
 end
