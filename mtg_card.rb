@@ -161,11 +161,27 @@ def combo_info(cards)
   make_response('Combo', attachments)
 end
 
-post '/' do
+def pick_colours(names, colour_count)
+  colours = [':mtg_mountain: Red', ':mtg_island: Blue', ':mtg_swamp: Black', ':mtg_forest: Green', ':mtg_plains: White']
+  result = ''.tap do |str|
+    names.sort.each do |name|
+      str << "#{name.strip} you must build a deck with #{colours.sample(colour_count).join(' and ')}\n"
+    end
+  end
+  make_response("The draw:\n" + result).to_json
+end
+
+post '/card' do
   cards = params['text'].split '+'
   if cards.length == 1
     json card_info(cards.first)
   else
     json combo_info(cards)
   end
+end
+
+post '/assign_colours' do
+  names = params['text'].split ','
+  colour_count = (names.last.to_i == 0) ? 1 : names.pop.to_i
+  pick_colours(names, colour_count)
 end
